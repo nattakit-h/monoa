@@ -1,0 +1,4 @@
+---
+Checks: 'bugprone-*,clang-analyzer-*,modernize-*,performance-*,readability-*,misc-*,-modernize-use-using,-misc-unused-parameters'
+...
+

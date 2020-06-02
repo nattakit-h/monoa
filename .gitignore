@@ -1,0 +1,13 @@
+# Project files
+
+build*/
+compile_commands.json
+
+# IDEs files
+*.kdev4
+.ccls-cache
+.projectile
+.vscode/
+.vs/
+.idea/
+
