@@ -33,6 +33,8 @@ auto get_token_type_string(token_type type) -> std::string
         return "puc_right_brace";
     case token_type::puc_colon:
         return "puc_colon";
+    case token_type::puc_semi_colon:
+        return "puc_semi_colon";
     case token_type::opt_plus:
         return "opt_plus";
     case token_type::opt_minus:
@@ -46,13 +48,13 @@ auto get_token_type_string(token_type type) -> std::string
     case token_type::lit_identifier:
         return "lit_identifier";
     case token_type::lit_int:
-        return "lit_int       ";
+        return "lit_int";
     case token_type::lit_dec:
-        return "lit_dec       ";
+        return "lit_dec";
     case token_type::lit_string:
-        return "lit_string    ";
-    case token_type::key_var:
-        return "key_var";
+        return "lit_string";
+    case token_type::key_let:
+        return "key_let";
     case token_type::key_fun:
         return "key_fun";
     case token_type::ctr_error:

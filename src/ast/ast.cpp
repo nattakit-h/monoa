@@ -16,19 +16,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cstdlib>
-#include <memory>
-#include <iostream>
-#include <parser.hpp>
-#include <lexer.hpp>
-#include <ast/printer.hpp>
+#include <ast/ast.hpp>
+#include <ast/visitor.hpp>
 
-auto main(int argc, char* argv[]) -> int
+namespace monoa::ast {
+
+
+auto root::accept(visitor* visitor) -> void
 {
-    auto lexer = std::make_unique<monoa::lexer>("let _x123 = 1;");
-    lexer->print_tokens();
-    auto parser = std::make_unique<monoa::parser>(lexer->get_tokens());
-    auto printer = std::make_unique<monoa::ast::printer>();
-    printer->visit(parser->ast());
-    return EXIT_SUCCESS;
+    return visitor->visit(this);
 }
+
+
+auto literal::accept(visitor* visitor) -> void
+{
+    visitor->visit(this);
+}
+
+auto unary_operation::accept(visitor* visitor) -> void
+{
+    visitor->visit(this);
+}
+
+auto binary_operation::accept(visitor* visitor) -> void
+{
+    visitor->visit(this);
+}
+
+auto compound_statement::accept(visitor* visitor) -> void
+{
+    visitor->visit(this);
+}
+
+auto variable_declaration::accept(visitor* visitor) -> void
+{
+    visitor->visit(this);
+}
+
+auto function_declaration::accept(visitor* visitor) -> void
+{
+    visitor->visit(this);
+}
+
+} // namespace monoa::ast

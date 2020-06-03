@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(monoa LANGUAGES CXX)
 
 # set(CMAKE_CXX_STANDARD 17)
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Excecutable
@@ -9,7 +10,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(monoa)
 
 target_sources(monoa PRIVATE
+  src/ast/ast.cpp
+  src/ast/printer.cpp
   src/command.cpp
+  src/parser.cpp
   src/token.cpp
   src/lexer.cpp)
 

@@ -16,19 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cstdlib>
-#include <memory>
-#include <iostream>
-#include <parser.hpp>
-#include <lexer.hpp>
-#include <ast/printer.hpp>
+#ifndef MONOA_AST_PRINTER_HPP
+#define MONOA_AST_PRINTER_HPP
 
-auto main(int argc, char* argv[]) -> int
+#include <ast/visitor.hpp>
+
+namespace monoa::ast {
+
+class printer : visitor
 {
-    auto lexer = std::make_unique<monoa::lexer>("let _x123 = 1;");
-    lexer->print_tokens();
-    auto parser = std::make_unique<monoa::parser>(lexer->get_tokens());
-    auto printer = std::make_unique<monoa::ast::printer>();
-    printer->visit(parser->ast());
-    return EXIT_SUCCESS;
-}
+public:
+    auto visit(root* node) -> void override;
+    auto visit(literal* node) -> void override;
+    auto visit(unary_operation* node) -> void override;
+    auto visit(binary_operation* node) -> void override;
+    auto visit(compound_statement* node) -> void override;
+    auto visit(variable_declaration* node) -> void override;
+    auto visit(function_declaration* node) -> void override;
+};
+
+} // namespace monoa::ast
+
+#endif // MONOA_AST_PRINTER_HPP

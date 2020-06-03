@@ -40,14 +40,14 @@ auto lexer::print_tokens() -> void
             line = token.line;
             std::cout << token.line << std::endl;
         }
-        std::cout << "|  ";
-        std::cout << get_token_type_string(token.type) << "   ";
+        std::cout << "| ";
+        std::cout << get_token_type_string(token.type);
         switch (token.type) {
         case token_type::lit_identifier:
         case token_type::lit_int:
         case token_type::lit_dec:
         case token_type::lit_string:
-            std::cout << "'" << token.lexeme << "'" << std::endl;
+            std::cout << " : '" << token.lexeme << "'" << std::endl;
             break;
         default:
             std::cout << std::endl;
@@ -87,14 +87,17 @@ auto lexer::process_source() -> void
         case ':':
             this->consume_operator(token_type::puc_colon);
             break;
+        case ';':
+            this->consume_operator(token_type::puc_semi_colon);
+            break;
         case '(':
             this->consume_operator(token_type::puc_left_paren);
             break;
         case ')':
             this->consume_operator(token_type::puc_right_paren);
             break;
-        case 'v':
-            this->consume_keyword("var", token_type::key_var);
+        case 'l':
+            this->consume_keyword("let", token_type::key_let);
             break;
         case 'f':
             this->consume_keyword("fun", token_type::key_fun);
@@ -138,7 +141,7 @@ auto lexer::consume_char(unsigned int amount) -> char
 auto lexer::consume_word() -> std::string
 {
     std::string word;
-    while (!is_end() && std::isalnum(this->peek())) {
+    while (!is_end() && (std::isalnum(this->peek()) || this->peek() == '_')) {
         word.push_back(this->consume_char());
     }
     return word;
@@ -179,7 +182,7 @@ auto lexer::consume_literal() -> void
 {
     if (std::isspace(this->peek())) {
         this->consume_white_space();
-    } else if (!std::isalnum(this->peek())) {
+    } else if (!std::isalnum(this->peek()) && this->peek() != '_') {
         this->make_token(token_type::ctr_error, std::string(1, this->consume_char()));
     } else if (std::isdigit(this->peek())) {
         this->consume_number();

@@ -32,6 +32,7 @@ enum class token_type
     puc_dot,
     puc_comma,
     puc_colon,
+    puc_semi_colon,
 
     opt_plus,
     opt_minus,
@@ -59,7 +60,7 @@ enum class token_type
     key_if,
     key_else,
     key_for,
-    key_var,
+    key_let,
     key_fun,
 
     ctr_error
