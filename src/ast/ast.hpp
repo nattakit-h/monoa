@@ -81,21 +81,22 @@ public:
     virtual ~expression() = default;
 };
 
-class type : public node
+class type
 {
 };
 
-/*class basic_type : public type
+class scalar_type : public type
 {
-    basic_type_name name;
-    auto accept(ast_visitor* visitor) -> void override;
-};*/
+public:
+    scalar_type(basic_type type) : type(type){};
+    basic_type type;
+};
 
 class literal : public expression
 {
 public:
     std::variant<int8_t, int16_t, int32_t, int64_t, uint8_t, uint16_t, uint32_t, uint64_t, float, double> value;
-    basic_type type;
+    std::unique_ptr<scalar_type> type;
     auto accept(visitor* visitor) -> void override;
 };
 
@@ -126,18 +127,33 @@ public:
 class variable_declaration : public statement
 {
 public:
-    std::unique_ptr<type> type_name;
     std::string name;
+    std::unique_ptr<type> type_name;
     std::unique_ptr<expression> expr;
+    auto accept(visitor* visitor) -> void override;
+};
+
+class function_parameter : public node
+{
+    std::string name;
+    std::unique_ptr<type> parameter_type;
     auto accept(visitor* visitor) -> void override;
 };
 
 class function_declaration : public statement
 {
 public:
-    std::unique_ptr<compound_statement> statement_list;
-    // args list
+    std::string name;
+    std::vector<std::unique_ptr<function_parameter>> parameters;
     std::unique_ptr<type> return_type;
+    std::unique_ptr<compound_statement> statement_list = std::make_unique<compound_statement>();
+    auto accept(visitor* visitor) -> void override;
+};
+
+class return_statement : public statement
+{
+public:
+    std::unique_ptr<expression> return_value;
     auto accept(visitor* visitor) -> void override;
 };
 

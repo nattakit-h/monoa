@@ -17,18 +17,32 @@
  */
 
 #include <cstdlib>
-#include <memory>
 #include <iostream>
-#include <parser.hpp>
-#include <lexer.hpp>
+#include <memory>
 #include <ast/printer.hpp>
+#include <lexer.hpp>
+#include <parser.hpp>
 
 auto main(int argc, char* argv[]) -> int
 {
-    auto lexer = std::make_unique<monoa::lexer>("let _x123 = 1;");
+    auto source = R"(
+fun main() -> int
+{
+    let x = 1;
+    return 1;
+}
+
+)";
+    auto lexer = std::make_unique<monoa::lexer>(source);
     lexer->print_tokens();
     auto parser = std::make_unique<monoa::parser>(lexer->get_tokens());
-    auto printer = std::make_unique<monoa::ast::printer>();
-    printer->visit(parser->ast());
+    if (!parser->error().has_value()) {
+        std::cout << std::endl;
+        auto printer = std::make_unique<monoa::ast::printer>();
+        printer->visit(parser->ast());
+    } else {
+        std::cerr << "parsing error : " << parser->error().value();
+    }
+
     return EXIT_SUCCESS;
 }

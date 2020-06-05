@@ -20,44 +20,93 @@
 
 namespace monoa {
 
-auto get_token_type_string(token_type type) -> std::string
+auto token::string() -> std::string
 {
-    switch (type) {
-    case token_type::puc_left_paren:
+    switch (this->type) {
+    case token::type::puc_left_paren:
+        return "(";
+    case token::type::puc_right_paren:
+        return ")";
+    case token::type::puc_left_brace:
+        return "{";
+    case token::type::puc_right_brace:
+        return "}";
+    case token::type::puc_colon:
+        return ":";
+    case token::type::puc_semi_colon:
+        return ";";
+    case token::type::opt_plus:
+        return "+";
+    case token::type::opt_minus:
+        return "-";
+    case token::type::opt_star:
+        return "*";
+    case token::type::opt_slash:
+        return "/";
+    case token::type::opt_equal:
+        return "=";
+    case token::type::opt_return:
+        return "->";
+    case token::type::key_let:
+        return "let";
+    case token::type::key_fun:
+        return "fun";
+    case token::type::key_return:
+        return "return";
+    case token::type::lit_identifier:
+    case token::type::lit_int:
+    case token::type::lit_float:
+    case token::type::lit_string:
+        return this->lexeme;
+    case token::type::ctr_error:
+        return "error";
+    default:
+        return "ctr_unknow";
+    }
+}
+
+auto token::type_string() -> std::string
+{
+    switch (this->type) {
+    case token::type::puc_left_paren:
         return "puc_left_paren";
-    case token_type::puc_right_paren:
+    case token::type::puc_right_paren:
         return "puc_right_paren";
-    case token_type::puc_left_brace:
+    case token::type::puc_left_brace:
         return "puc_left_brace";
-    case token_type::puc_right_brace:
+    case token::type::puc_right_brace:
         return "puc_right_brace";
-    case token_type::puc_colon:
+    case token::type::puc_colon:
         return "puc_colon";
-    case token_type::puc_semi_colon:
+    case token::type::puc_semi_colon:
         return "puc_semi_colon";
-    case token_type::opt_plus:
+    case token::type::opt_plus:
         return "opt_plus";
-    case token_type::opt_minus:
+    case token::type::opt_minus:
         return "opt_minus";
-    case token_type::opt_star:
+    case token::type::opt_star:
         return "opt_star";
-    case token_type::opt_slash:
+    case token::type::opt_slash:
         return "opt_slash";
-    case token_type::opt_equal:
+    case token::type::opt_equal:
         return "opt_equal";
-    case token_type::lit_identifier:
+    case token::type::opt_return:
+        return "opt_return";
+    case token::type::lit_identifier:
         return "lit_identifier";
-    case token_type::lit_int:
+    case token::type::lit_int:
         return "lit_int";
-    case token_type::lit_dec:
-        return "lit_dec";
-    case token_type::lit_string:
+    case token::type::lit_float:
+        return "lit_float";
+    case token::type::lit_string:
         return "lit_string";
-    case token_type::key_let:
+    case token::type::key_let:
         return "key_let";
-    case token_type::key_fun:
+    case token::type::key_fun:
         return "key_fun";
-    case token_type::ctr_error:
+    case token::type::key_return:
+        return "key_return";
+    case token::type::ctr_error:
         return "ctr_error";
     default:
         return "ctr_unknow";

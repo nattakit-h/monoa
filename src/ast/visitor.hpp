@@ -33,6 +33,8 @@ public:
     virtual auto visit(compound_statement* node) -> void = 0;
     virtual auto visit(variable_declaration* node) -> void = 0;
     virtual auto visit(function_declaration* node) -> void = 0;
+    virtual auto visit(function_parameter* node) -> void = 0;
+    virtual auto visit(return_statement* node) -> void = 0;
     virtual ~visitor() = default;
 };
 

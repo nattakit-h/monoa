@@ -33,6 +33,13 @@ public:
     auto visit(compound_statement* node) -> void override;
     auto visit(variable_declaration* node) -> void override;
     auto visit(function_declaration* node) -> void override;
+    auto visit(function_parameter* node) -> void override;
+    auto visit(return_statement* node) -> void override;
+
+private:
+    unsigned int level = 0;
+
+    auto print_node(std::string message) -> void;
 };
 
 } // namespace monoa::ast

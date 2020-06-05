@@ -19,48 +19,84 @@
 #include <iostream>
 #include <ast/printer.hpp>
 
-namespace monoa::ast
-{
+namespace monoa::ast {
 
 auto printer::visit(root* node) -> void
 {
-    std::cout << "root" << std::endl;
     node->statement_list->accept(this);
 }
 
 auto printer::visit(literal* node) -> void
 {
-    std::cout << "literal : " << std::get<int>(node->value) << std::endl;
+    // TODO: Get type properly
+    this->print_node("lit : " + std::to_string(std::get<int>(node->value)));
 }
 
 auto printer::visit(unary_operation* node) -> void
 {
-    std::cout << "unary_operation" << std::endl;
+    this->print_node("un_op");
 }
 
 auto printer::visit(binary_operation* node) -> void
 {
-    std::cout << "binary_operation" << std::endl;
+    this->print_node("bi_op");
 }
 
 auto printer::visit(compound_statement* node) -> void
 {
-    std::cout << "compound_statement" << std::endl;
-    for (auto & s : node->statements) {
+    this->print_node("block");
+
+    this->level++;
+    for (auto& s : node->statements) {
         s->accept(this);
     }
+    this->level--;
 }
 
 auto printer::visit(variable_declaration* node) -> void
 {
-    std::cout << "variable_declaration : " << node->name << std::endl;
+    this->print_node("var_delc : " + node->name);
+
+    this->level++;
     node->expr->accept(this);
+    this->level--;
 }
 
 auto printer::visit(function_declaration* node) -> void
 {
-    std::cout << "function_declaration" << std::endl;
+    this->print_node("fun_delc : " + node->name);
+
+    this->level++;
     node->statement_list->accept(this);
+    this->level--;
 }
 
+auto printer::visit(function_parameter* node) -> void
+{
+    this->print_node("fun_param");
 }
+
+auto printer::visit(return_statement* node) -> void
+{
+    this->print_node("ret_stmt");
+
+    this->level++;
+    node->return_value->accept(this);
+    this->level--;
+}
+
+auto printer::print_node(std::string message) -> void
+{
+    std::string line_level = " |";
+    std::string line;
+
+    for (int i = 0; i < this->level; i++) {
+        line += line_level;
+    }
+    line += "-";
+    line.erase(0, 1);
+
+    std::cout << line << message << std::endl;
+}
+
+} // namespace monoa::ast

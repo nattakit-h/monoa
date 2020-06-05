@@ -23,56 +23,60 @@
 
 namespace monoa {
 
-enum class token_type
+class token
 {
-    puc_left_paren,
-    puc_right_paren,
-    puc_left_brace,
-    puc_right_brace,
-    puc_dot,
-    puc_comma,
-    puc_colon,
-    puc_semi_colon,
+public:
+    enum class type
+    {
+        puc_left_paren,
+        puc_right_paren,
+        puc_left_brace,
+        puc_right_brace,
+        puc_dot,
+        puc_comma,
+        puc_colon,
+        puc_semi_colon,
 
-    opt_plus,
-    opt_minus,
-    opt_star,
-    opt_slash,
+        opt_plus,
+        opt_minus,
+        opt_star,
+        opt_slash,
 
-    opt_equal,
-    opt_equal_equal,
-    opt_bang,
-    opt_bang_equal,
-    opt_greater,
-    opt_greater_equal,
-    opt_lesser,
-    opt_lesser_equal,
+        opt_equal,
+        opt_equal_equal,
+        opt_bang,
+        opt_bang_equal,
+        opt_greater,
+        opt_greater_equal,
+        opt_lesser,
+        opt_lesser_equal,
 
-    lit_identifier,
-    lit_int,
-    lit_dec,
-    lit_string,
+        opt_return,
 
-    typ_int,
-    typ_dec,
-    typ_string,
+        lit_identifier,
+        lit_int,
+        lit_float,
+        lit_string,
 
-    key_if,
-    key_else,
-    key_for,
-    key_let,
-    key_fun,
+        typ_int,
+        typ_dec,
+        typ_string,
 
-    ctr_error
-};
+        key_if,
+        key_else,
+        key_for,
+        key_let,
+        key_fun,
+        key_return,
 
-auto get_token_type_string(token_type type) -> std::string;
+        ctr_error
+    };
 
-struct token
-{
-    token_type type = token_type::ctr_error;
+    type type = type::ctr_error;
     std::string lexeme = "";
     unsigned int line = 0;
+    auto string() -> std::string;
+    auto type_string() -> std::string;
 };
 
 } // namespace monoa

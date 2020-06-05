@@ -20,6 +20,12 @@
 #include <iostream>
 #include <lexer.hpp>
 
+namespace {
+
+constexpr unsigned int token_string_padding = 17;
+
+}
+
 namespace monoa {
 
 lexer::lexer(std::string source) : source(source)
@@ -34,32 +40,35 @@ auto lexer::get_tokens() -> std::vector<token>
 
 auto lexer::print_tokens() -> void
 {
+    unsigned int line = 0;
     for (monoa::token token : this->tokens) {
-        static unsigned line = 0;
         if (token.line != line) {
             line = token.line;
             std::cout << token.line << std::endl;
         }
-        std::cout << "| ";
-        std::cout << get_token_type_string(token.type);
-        switch (token.type) {
-        case token_type::lit_identifier:
-        case token_type::lit_int:
-        case token_type::lit_dec:
-        case token_type::lit_string:
-            std::cout << " : '" << token.lexeme << "'" << std::endl;
-            break;
-        default:
-            std::cout << std::endl;
-            break;
+
+        std::string message = "| " + token.type_string();
+
+        unsigned int padding_length;
+        if (message.length() > token_string_padding) {
+            padding_length = 0;
+        } else {
+            padding_length = token_string_padding - message.length();
         }
+
+        std::string padding;
+        for (int i = 0; i < padding_length; i++) {
+            padding += ' ';
+        }
+
+        std::cout << message << padding << " : " << token.string() << std::endl;
     }
 }
 
 auto lexer::process_source() -> void
 {
     while (!this->is_end()) {
-        if (!this->tokens.empty() && this->tokens.back().type == token_type::ctr_error) {
+        if (!this->tokens.empty() && this->tokens.back().type == token::type::ctr_error) {
             break;
         }
 
@@ -72,35 +81,48 @@ auto lexer::process_source() -> void
             this->consume_white_space();
             break;
         case '+':
-            this->consume_operator(token_type::opt_plus);
+            this->consume_operator(token::type::opt_plus);
             break;
         case '-':
-            this->consume_operator(token_type::opt_minus);
+            if (this->peek_next() == '>') {
+                this->consume_operator(token::type::opt_return, 2);
+            } else {
+                this->consume_operator(token::type::opt_minus);
+            }
             break;
         case '=':
             if (this->peek_next() == '=') {
-                this->consume_operator(token_type::opt_equal_equal);
+                this->consume_operator(token::type::opt_equal_equal, 2);
             } else {
-                this->consume_operator(token_type::opt_equal);
+                this->consume_operator(token::type::opt_equal);
             }
             break;
         case ':':
-            this->consume_operator(token_type::puc_colon);
+            this->consume_operator(token::type::puc_colon);
             break;
         case ';':
-            this->consume_operator(token_type::puc_semi_colon);
+            this->consume_operator(token::type::puc_semi_colon);
             break;
         case '(':
-            this->consume_operator(token_type::puc_left_paren);
+            this->consume_operator(token::type::puc_left_paren);
             break;
         case ')':
-            this->consume_operator(token_type::puc_right_paren);
+            this->consume_operator(token::type::puc_right_paren);
             break;
-        case 'l':
-            this->consume_keyword("let", token_type::key_let);
+        case '{':
+            this->consume_operator(token::type::puc_left_brace);
+            break;
+        case '}':
+            this->consume_operator(token::type::puc_right_brace);
             break;
         case 'f':
-            this->consume_keyword("fun", token_type::key_fun);
+            this->consume_keyword("fun", token::type::key_fun);
+            break;
+        case 'l':
+            this->consume_keyword("let", token::type::key_let);
+            break;
+        case 'r':
+            this->consume_keyword("return", token::type::key_return);
             break;
         case '"':
             this->consume_string();
@@ -112,7 +134,7 @@ auto lexer::process_source() -> void
     }
 }
 
-auto lexer::make_token(token_type type, std::string lexeme) -> void
+auto lexer::make_token(enum token::type type, std::string lexeme) -> void
 {
     this->tokens.emplace_back(token{type, lexeme, this->line});
 }
@@ -127,7 +149,8 @@ auto lexer::peek() -> unsigned char
     return this->source[this->current];
 }
 
-auto lexer::peek_next() -> unsigned char {
+auto lexer::peek_next() -> unsigned char
+{
     return this->is_end() ? '\0' : this->source[this->current + 1];
 }
 
@@ -160,21 +183,21 @@ auto lexer::consume_white_space() -> void
     }
 }
 
-auto lexer::consume_operator(token_type type, unsigned int length) -> void
+auto lexer::consume_operator(enum token::type type, unsigned int length) -> void
 {
     this->consume_char(length);
     this->make_token(type, "");
 }
 
-auto lexer::consume_keyword(std::string expected, token_type type) -> void
+auto lexer::consume_keyword(std::string expected, enum token::type type) -> void
 {
     std::string word = this->consume_word();
     if (!expected.empty() && word == expected) {
         this->make_token(type, "");
     } else if (!word.empty()) {
-        this->make_token(token_type::lit_identifier, word);
+        this->make_token(token::type::lit_identifier, word);
     } else {
-        this->make_token(token_type::ctr_error, word);
+        this->make_token(token::type::ctr_error, word);
     }
 }
 
@@ -183,24 +206,24 @@ auto lexer::consume_literal() -> void
     if (std::isspace(this->peek())) {
         this->consume_white_space();
     } else if (!std::isalnum(this->peek()) && this->peek() != '_') {
-        this->make_token(token_type::ctr_error, std::string(1, this->consume_char()));
+        this->make_token(token::type::ctr_error, std::string(1, this->consume_char()));
     } else if (std::isdigit(this->peek())) {
         this->consume_number();
     } else {
-        this->make_token(token_type::lit_identifier, this->consume_word());
+        this->make_token(token::type::lit_identifier, this->consume_word());
     }
 }
 
 auto lexer::consume_number() -> void
 {
     std::string number;
-    token_type type = token_type::lit_int;
+    enum token::type type = token::type::lit_int;
     while (std::isdigit(this->peek())) {
         number += this->consume_char();
     }
     if (this->peek() == '.') {
         number += this->consume_char();
-        type = token_type::lit_dec; // TODO: Check for trailing dot ?
+        type = token::type::lit_float; // TODO: Check for trailing dot ?
         while (std::isdigit(this->peek())) {
             number += this->consume_char();
         }
@@ -217,11 +240,11 @@ auto lexer::consume_string() -> void
             value += this->consume_char();
         } else {
             this->consume_char();
-            this->make_token(token_type::lit_string, value);
+            this->make_token(token::type::lit_string, value);
             return;
         }
     }
-    this->make_token(token_type::ctr_error, "");
+    this->make_token(token::type::ctr_error, "");
 }
 
 } // namespace monoa

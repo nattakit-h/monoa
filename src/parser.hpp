@@ -20,31 +20,38 @@
 #define MONOA_PARSER_HPP
 
 #include <memory>
+#include <optional>
 #include <vector>
 #include <ast/ast.hpp>
 #include <token.hpp>
 
 namespace monoa {
 
-class parser {
+class parser
+{
 public:
     parser(std::vector<token> tokens);
     auto ast() -> ast::root*;
+    auto error() -> std::optional<std::string>;
 
 private:
     unsigned int current = 0;
     std::vector<token> tokens;
+    std::optional<std::string> error_string;
     std::unique_ptr<ast::root> syntax_tree;
 
+    auto set_error(std::string message) -> void;
     auto is_end() -> bool;
     auto peek() -> token;
     auto advance() -> token;
-    auto peek_type() -> token_type;
     auto parse() -> void;
-    auto make_statement(std::unique_ptr<ast::statement> statement) -> void;
+    auto make_compound_statement() -> std::unique_ptr<ast::compound_statement>;
     auto make_expression() -> std::unique_ptr<ast::expression>;
     auto make_constant() -> std::unique_ptr<ast::literal>;
-    auto make_decl_var() -> void;
+    auto make_decl_var() -> std::unique_ptr<ast::variable_declaration>;
+    auto make_decl_fun() -> std::unique_ptr<ast::function_declaration>;
+    auto make_fun_parameters() -> std::vector<std::unique_ptr<ast::function_parameter>>;
+    auto make_return() -> std::unique_ptr<ast::return_statement>;
 };
 
 } // namespace monoa

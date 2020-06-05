@@ -21,12 +21,10 @@
 
 namespace monoa::ast {
 
-
 auto root::accept(visitor* visitor) -> void
 {
     return visitor->visit(this);
 }
-
 
 auto literal::accept(visitor* visitor) -> void
 {
@@ -54,6 +52,11 @@ auto variable_declaration::accept(visitor* visitor) -> void
 }
 
 auto function_declaration::accept(visitor* visitor) -> void
+{
+    visitor->visit(this);
+}
+
+auto return_statement::accept(visitor* visitor) -> void
 {
     visitor->visit(this);
 }

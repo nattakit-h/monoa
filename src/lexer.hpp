@@ -38,7 +38,7 @@ private:
     std::vector<token> tokens;
     std::string source;
     auto process_source() -> void;
-    auto make_token(token_type type, std::string lexeme) -> void;
+    auto make_token(enum token::type type, std::string lexeme) -> void;
     auto is_end() -> bool;
     auto peek() -> unsigned char;
     auto peek_next() -> unsigned char;
@@ -46,8 +46,8 @@ private:
     auto consume_word() -> std::string;
     auto consume_new_line() -> void;
     auto consume_white_space() -> void;
-    auto consume_operator(token_type type, unsigned int length = 1) -> void;
-    auto consume_keyword(std::string expected, token_type type) -> void;
+    auto consume_operator(enum token::type type, unsigned int length = 1) -> void;
+    auto consume_keyword(std::string expected, enum token::type type) -> void;
     auto consume_literal() -> void;
     auto consume_number() -> void;
     auto consume_string() -> void;
