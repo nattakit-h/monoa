@@ -20,8 +20,8 @@
 #include <iostream>
 #include <memory>
 #include <ast/printer.hpp>
-#include <lexer.hpp>
-#include <parser.hpp>
+#include <parser/lexer.hpp>
+#include <parser/parser.hpp>
 
 auto main(int argc, char* argv[]) -> int
 {
@@ -33,9 +33,9 @@ fun main() -> int
 }
 
 )";
-    auto lexer = std::make_unique<monoa::lexer>(source);
+    auto lexer = std::make_unique<monoa::parser::lexer>(source);
     lexer->print_tokens();
-    auto parser = std::make_unique<monoa::parser>(lexer->get_tokens());
+    auto parser = std::make_unique<monoa::parser::parser>(lexer->get_tokens());
     if (!parser->error().has_value()) {
         std::cout << std::endl;
         auto printer = std::make_unique<monoa::ast::printer>();

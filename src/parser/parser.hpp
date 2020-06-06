@@ -23,9 +23,9 @@
 #include <optional>
 #include <vector>
 #include <ast/ast.hpp>
-#include <token.hpp>
+#include <parser/token.hpp>
 
-namespace monoa {
+namespace monoa::parser {
 
 class parser
 {

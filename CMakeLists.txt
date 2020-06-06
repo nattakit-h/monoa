@@ -12,10 +12,10 @@ add_executable(monoa)
 target_sources(monoa PRIVATE
   src/ast/ast.cpp
   src/ast/printer.cpp
-  src/command.cpp
-  src/parser.cpp
-  src/token.cpp
-  src/lexer.cpp)
+  src/parser/parser.cpp
+  src/parser/token.cpp
+  src/parser/lexer.cpp
+  src/command.cpp)
 
 set_property(TARGET monoa PROPERTY CXX_STANDARD 17)
 

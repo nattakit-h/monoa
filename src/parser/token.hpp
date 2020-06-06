@@ -21,7 +21,7 @@
 
 #include <string>
 
-namespace monoa {
+namespace monoa::parser {
 
 class token
 {

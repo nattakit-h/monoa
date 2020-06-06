@@ -17,9 +17,9 @@
  */
 
 #include <iostream>
-#include <parser.hpp>
+#include <parser/parser.hpp>
 
-namespace monoa {
+namespace monoa::parser {
 
 parser::parser(std::vector<token> tokens) : tokens(tokens)
 {

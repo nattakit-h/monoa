@@ -18,7 +18,7 @@
 
 #include <cctype>
 #include <iostream>
-#include <lexer.hpp>
+#include <parser/lexer.hpp>
 
 namespace {
 
@@ -26,7 +26,7 @@ constexpr unsigned int token_string_padding = 17;
 
 }
 
-namespace monoa {
+namespace monoa::parser {
 
 lexer::lexer(std::string source) : source(source)
 {
@@ -41,7 +41,7 @@ auto lexer::get_tokens() -> std::vector<token>
 auto lexer::print_tokens() -> void
 {
     unsigned int line = 0;
-    for (monoa::token token : this->tokens) {
+    for (token token : this->tokens) {
         if (token.line != line) {
             line = token.line;
             std::cout << token.line << std::endl;

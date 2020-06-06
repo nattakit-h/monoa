@@ -21,9 +21,9 @@
 
 #include <string>
 #include <vector>
-#include <token.hpp>
+#include <parser/token.hpp>
 
-namespace monoa {
+namespace monoa::parser {
 
 class lexer
 {

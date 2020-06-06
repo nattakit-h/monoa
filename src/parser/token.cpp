@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <token.hpp>
+#include <parser/token.hpp>
 
-namespace monoa {
+namespace monoa::parser {
 
 auto token::string() -> std::string
 {
