@@ -16,12 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cstdlib>
 #include <iostream>
 #include <memory>
 #include <ast/printer.hpp>
 #include <parser/lexer.hpp>
 #include <parser/parser.hpp>
+#include <vm/compiler.hpp>
+#include <vm/vm.hpp>
+
+using namespace monoa;
 
 auto main(int argc, char* argv[]) -> int
 {
@@ -29,20 +32,25 @@ auto main(int argc, char* argv[]) -> int
 fun main() -> int
 {
     let x = 1;
-    return 1;
+    return 40474;
 }
 
 )";
-    auto lexer = std::make_unique<monoa::parser::lexer>(source);
+    auto lexer = std::make_unique<parser::lexer>(source);
     lexer->print_tokens();
-    auto parser = std::make_unique<monoa::parser::parser>(lexer->get_tokens());
+    auto parser = std::make_unique<parser::parser>(lexer->get_tokens());
     if (!parser->error().has_value()) {
         std::cout << std::endl;
-        auto printer = std::make_unique<monoa::ast::printer>();
-        printer->visit(parser->ast());
+        auto printer = std::make_unique<ast::printer>();
+        printer->print(parser->ast());
     } else {
         std::cerr << "parsing error : " << parser->error().value();
     }
+    auto compiler = std::make_unique<vm::compiler>(parser->ast());
+    compiler->print_opcodes();
+    auto vm = std::make_unique<vm::vm>(compiler->opcodes());
+
+    std::cout << vm->run() << std::endl;
 
     return EXIT_SUCCESS;
 }

@@ -119,7 +119,8 @@ auto parser::make_expression() -> std::unique_ptr<ast::expression>
             end = true;
             break;
         default:
-            this->error_string = "unexpected '" + this->peek().lexeme + "' at line : " + std::to_string(this->peek().line);
+            this->error_string =
+                "unexpected '" + this->peek().lexeme + "' at line : " + std::to_string(this->peek().line);
             break;
         }
     }

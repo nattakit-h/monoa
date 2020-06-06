@@ -21,6 +21,11 @@
 
 namespace monoa::ast {
 
+auto printer::print(root* node) -> void
+{
+    this->visit(node);
+}
+
 auto printer::visit(root* node) -> void
 {
     node->statement_list->accept(this);

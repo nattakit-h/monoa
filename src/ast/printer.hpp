@@ -26,6 +26,7 @@ namespace monoa::ast {
 class printer : visitor
 {
 public:
+    auto print(root* node) -> void;
     auto visit(root* node) -> void override;
     auto visit(literal* node) -> void override;
     auto visit(unary_operation* node) -> void override;
@@ -38,7 +39,6 @@ public:
 
 private:
     unsigned int level = 0;
-
     auto print_node(std::string message) -> void;
 };
 
