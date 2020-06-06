@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MONOA_LEXER_HPP
-#define MONOA_LEXER_HPP
+#ifndef MONOA_PARSER_LEXER_HPP
+#define MONOA_PARSER_LEXER_HPP
 
 #include <string>
 #include <vector>
@@ -53,6 +53,6 @@ private:
     auto consume_string() -> void;
 };
 
-} // namespace monoa
+} // namespace monoa::parser
 
-#endif // MONOA_LEXER_HPP
+#endif // MONOA_PARSER_LEXER_HPP

@@ -102,13 +102,13 @@ auto parser::make_compound_statement() -> std::unique_ptr<ast::compound_statemen
 auto parser::make_expression() -> std::unique_ptr<ast::expression>
 {
     std::unique_ptr<ast::expression> expr;
-    bool end = false;
     std::optional<enum token::type> end_token;
     if (this->peek().type == token::type::puc_right_brace) {
         this->advance();
         end_token = token::type::puc_left_brace;
     }
 
+    bool end = false;
     while (!end && !this->error_string.has_value() && (!end_token.has_value() || this->peek().type == end_token)) {
         switch (this->peek().type) {
         case token::type::lit_int:
@@ -183,4 +183,4 @@ auto parser::make_return() -> std::unique_ptr<ast::return_statement>
     return ret_stmt;
 }
 
-} // namespace monoa
+} // namespace monoa::parser

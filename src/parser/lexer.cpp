@@ -247,4 +247,4 @@ auto lexer::consume_string() -> void
     this->make_token(token::type::ctr_error, "");
 }
 
-} // namespace monoa
+} // namespace monoa::parser

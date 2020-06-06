@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MONOA_PARSER_HPP
-#define MONOA_PARSER_HPP
+#ifndef MONOA_PARSER_PARSER_HPP
+#define MONOA_PARSER_PARSER_HPP
 
 #include <memory>
 #include <optional>
@@ -54,6 +54,6 @@ private:
     auto make_return() -> std::unique_ptr<ast::return_statement>;
 };
 
-} // namespace monoa
+} // namespace monoa::parser
 
-#endif // MONOA_PARSER_HPP
+#endif // MONOA_PARSER_PARSER_HPP

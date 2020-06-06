@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MONOA_TOKEN_HPP
-#define MONOA_TOKEN_HPP
+#ifndef MONOA_PARSER_TOKEN_HPP
+#define MONOA_PARSER_TOKEN_HPP
 
 #include <string>
 
@@ -79,6 +79,6 @@ public:
     auto type_string() -> std::string;
 };
 
-} // namespace monoa
+} // namespace monoa::parser
 
-#endif // MONOA_TOKEN_HPP
+#endif // MONOA_PARSER_TOKEN_HPP

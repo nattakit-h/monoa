@@ -113,4 +113,4 @@ auto token::type_string() -> std::string
     }
 }
 
-} // namespace monoa
+} // namespace monoa::parser
