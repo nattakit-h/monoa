@@ -90,6 +90,13 @@ auto lexer::process_source() -> void
                 this->consume_operator(token::type::opt_minus);
             }
             break;
+        case '*':
+            this->consume_operator(token::type::opt_star);
+            break;
+        case '/':
+            this->consume_operator(token::type::opt_slash);
+            break;
+
         case '=':
             if (this->peek_next() == '=') {
                 this->consume_operator(token::type::opt_equal_equal, 2);

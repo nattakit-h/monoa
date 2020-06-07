@@ -44,7 +44,11 @@ auto printer::visit(unary_operation* node) -> void
 
 auto printer::visit(binary_operation* node) -> void
 {
-    this->print_node("bi_op");
+    this->print_node("bi_op : " + std::to_string(static_cast<int>(node->op)));
+    this->level++;
+    node->right->accept(this);
+    node->left->accept(this);
+    this->level--;
 }
 
 auto printer::visit(compound_statement* node) -> void

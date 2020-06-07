@@ -111,6 +111,7 @@ public:
 class binary_operation : public expression
 {
 public:
+    binary_operation(std::unique_ptr<expression> left, operation op, std::unique_ptr<expression> right);
     std::unique_ptr<expression> left;
     operation op;
     std::unique_ptr<expression> right;

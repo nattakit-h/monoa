@@ -18,9 +18,9 @@
 
 #include <iomanip>
 #include <iostream>
-#include <vm/compiler.hpp>
+#include <ast/compiler.hpp>
 
-namespace monoa::vm {
+namespace monoa::ast {
 
 compiler::compiler(ast::root* ast)
 {
@@ -36,10 +36,10 @@ auto compiler::print_opcodes() -> void
 {
     constexpr unsigned int line_max = 10;
     unsigned int line = 0;
-    std::cout << std::hex << std::setfill('0') << std::setw(2) << std::uppercase;
+    std::cout << std::hex << std::uppercase;
     for (std::uint8_t opcode : program) {
-        std::cout << "0x" << static_cast<int>(opcode) << " ";
-        if (line++ >= line_max) {
+        std::cout << "0x" << std::setfill('0') << std::setw(2) << static_cast<int>(opcode) << " ";
+        if (line++ == line_max - 1) {
             std::cout << std::endl;
             line = 0;
         }
@@ -57,7 +57,7 @@ auto compiler::visit(ast::root* node) -> void
 
 auto compiler::visit(ast::literal* node) -> void
 {
-    this->emit(opcode::op_push_32);
+    this->emit(vm::opcode::op_push_32);
     this->emit(static_cast<uint32_t>(std::get<int>(node->value))); //  TODO: Fix this
 }
 
@@ -72,6 +72,24 @@ auto compiler::visit(ast::binary_operation* node) -> void
 {
     if (this->has_error()) {
         return;
+    }
+    node->left->accept(this);
+    node->right->accept(this);
+    switch (node->op) {
+    case ast::operation::addition:
+        this->emit(vm::opcode::op_add_32);
+        break;
+    case ast::operation::subtraction:
+        this->emit(vm::opcode::op_sub_32);
+        break;
+    case ast::operation::multiplication:
+        this->emit(vm::opcode::op_mul_32);
+        break;
+    case ast::operation::division:
+        this->emit(vm::opcode::op_div_32);
+        break;
+    default:
+        this->error_string = "unexpected operator";
     }
 }
 
@@ -113,7 +131,7 @@ auto compiler::visit(ast::return_statement* node) -> void
         return;
     }
     node->return_value->accept(this);
-    this->emit(opcode::op_ret);
+    this->emit(vm::opcode::op_ret);
 }
 
 auto compiler::has_error() -> bool
@@ -121,7 +139,7 @@ auto compiler::has_error() -> bool
     return this->error_string.has_value();
 }
 
-auto compiler::emit(opcode data) -> void
+auto compiler::emit(vm::opcode data) -> void
 {
     this->program.emplace_back(static_cast<std::uint8_t>(data));
 }
@@ -134,7 +152,7 @@ auto compiler::emit(std::uint8_t data) -> void
 auto compiler::emit(std::uint16_t data) -> void
 {
     this->program.emplace_back((data >> 8) & 0xFF);
-    this->program.emplace_back((data)&0xFF);
+    this->program.emplace_back(data & 0xFF);
 }
 
 auto compiler::emit(std::uint32_t data) -> void
@@ -142,7 +160,7 @@ auto compiler::emit(std::uint32_t data) -> void
     this->program.emplace_back((data >> 24) & 0xFF);
     this->program.emplace_back((data >> 16) & 0xFF);
     this->program.emplace_back((data >> 8) & 0xFF);
-    this->program.emplace_back((data)&0xFF);
+    this->program.emplace_back(data & 0xFF);
 }
 
 auto compiler::emit(std::uint64_t data) -> void
@@ -154,7 +172,7 @@ auto compiler::emit(std::uint64_t data) -> void
     this->program.emplace_back((data >> 24) & 0xFF);
     this->program.emplace_back((data >> 16) & 0xFF);
     this->program.emplace_back((data >> 8) & 0xFF);
-    this->program.emplace_back((data)&0xFF);
+    this->program.emplace_back(data & 0xFF);
 }
 
-} // namespace monoa::vm
+} // namespace monoa::ast

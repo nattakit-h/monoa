@@ -39,6 +39,30 @@ private:
     auto advance() -> uint64_t;
     auto push(uint64_t data) -> void;
     auto pop() -> uint64_t;
+
+    template<typename type>
+    auto add(type left, type right) -> type
+    {
+        return left + right;
+    }
+
+    template<typename type>
+    auto sub(type left, type right) -> type
+    {
+        return left - right;
+    }
+
+    template<typename type>
+    auto mul(type left, type right) -> type
+    {
+        return left * right;
+    }
+
+    template<typename type>
+    auto div(type left, type right) -> type
+    {
+        return left / right;
+    }
 };
 
 } // namespace monoa::vm

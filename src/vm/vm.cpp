@@ -50,6 +50,22 @@ auto vm::run() -> int
                        (this->advance() << 32) | (this->advance() << 24) | (this->advance() << 16) |
                        (this->advance() << 8) | this->advance());
             break;
+        case opcode::op_add_32:
+            this->advance();
+            this->push(this->add<uint32_t>(this->pop(), this->pop()));
+            break;
+        case opcode::op_sub_32:
+            this->advance();
+            this->push(this->sub<uint32_t>(this->pop(), this->pop()));
+            break;
+        case opcode::op_mul_32:
+            this->advance();
+            this->push(this->mul<uint32_t>(this->pop(), this->pop()));
+            break;
+        case opcode::op_div_32:
+            this->advance();
+            this->push(this->div<uint32_t>(this->pop(), this->pop()));
+            break;
         case opcode::op_ret:
             this->ip++;
             break;

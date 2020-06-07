@@ -18,10 +18,10 @@
 
 #include <iostream>
 #include <memory>
+#include <ast/compiler.hpp>
 #include <ast/printer.hpp>
 #include <parser/lexer.hpp>
 #include <parser/parser.hpp>
-#include <vm/compiler.hpp>
 #include <vm/vm.hpp>
 
 using namespace monoa;
@@ -31,8 +31,7 @@ auto main(int argc, char* argv[]) -> int
     auto source = R"(
 fun main() -> int
 {
-    let x = 1;
-    return 40474;
+    return 74 - 10 + 44 * 99 - 346 * 2;
 }
 
 )";
@@ -46,7 +45,7 @@ fun main() -> int
     } else {
         std::cerr << "parsing error : " << parser->error().value();
     }
-    auto compiler = std::make_unique<vm::compiler>(parser->ast());
+    auto compiler = std::make_unique<ast::compiler>(parser->ast());
     compiler->print_opcodes();
     auto vm = std::make_unique<vm::vm>(compiler->opcodes());
 

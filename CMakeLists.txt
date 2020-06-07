@@ -9,11 +9,11 @@ add_executable(monoa)
 
 target_sources(monoa PRIVATE
   src/ast/ast.cpp
+  src/ast/compiler.cpp
   src/ast/printer.cpp
   src/parser/parser.cpp
   src/parser/token.cpp
   src/parser/lexer.cpp
-  src/vm/compiler.cpp
   src/vm/vm.cpp
   src/command.cpp)
 

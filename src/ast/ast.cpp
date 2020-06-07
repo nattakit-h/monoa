@@ -36,6 +36,11 @@ auto unary_operation::accept(visitor* visitor) -> void
     visitor->visit(this);
 }
 
+binary_operation::binary_operation(std::unique_ptr<expression> left, operation op, std::unique_ptr<expression> right)
+    : left(std::move(left)), op(op), right(std::move(right))
+{
+}
+
 auto binary_operation::accept(visitor* visitor) -> void
 {
     visitor->visit(this);

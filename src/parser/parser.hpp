@@ -42,12 +42,16 @@ private:
 
     auto set_error(std::string message) -> void;
     auto is_end() -> bool;
-    auto peek() -> token;
-    auto advance() -> token;
+    auto peek() -> token*;
+    auto advance() -> token*;
     auto parse() -> void;
+    auto token_to_operation(token* type) -> ast::operation;
+    auto match(std::vector<enum token::type> types) -> bool;
     auto make_compound_statement() -> std::unique_ptr<ast::compound_statement>;
     auto make_expression() -> std::unique_ptr<ast::expression>;
-    auto make_constant() -> std::unique_ptr<ast::literal>;
+    auto make_addition() -> std::unique_ptr<ast::expression>;
+    auto make_multiplication() -> std::unique_ptr<ast::expression>;
+    auto make_literal() -> std::unique_ptr<ast::expression>;
     auto make_decl_var() -> std::unique_ptr<ast::variable_declaration>;
     auto make_decl_fun() -> std::unique_ptr<ast::function_declaration>;
     auto make_fun_parameters() -> std::vector<std::unique_ptr<ast::function_parameter>>;
