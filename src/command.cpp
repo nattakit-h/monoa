@@ -28,20 +28,36 @@ using namespace monoa;
 auto main(int argc, char* argv[]) -> int
 {
     auto source = R"(
-fun main() -> int
+fun main() -> i64
 {
     let a = 10;
     return 74 - 10 + 44 * 99 - 346 / 2;
 }
 
+fun pow() -> i64
+{
+    return 10;
+}
+
 )";
     auto lexer = std::make_unique<parser::lexer>(source);
-    auto parser = std::make_unique<parser::parser>(lexer->get_tokens());
-    auto compiler = std::make_unique<ast::compiler>(parser->ast());
-    if (!parser->error().has_value()) {
-        std::cout << compiler->result();
-    } else {
-        std::cerr << "parsing error : " << parser->error().value();
+    if (lexer->error().has_value()) {
+        std::cerr << "lexing error : " << lexer->error().value();
+        return EXIT_FAILURE;
     }
+
+    auto parser = std::make_unique<parser::parser>(lexer->get_tokens());
+    if (parser->error().has_value()) {
+        std::cerr << "parsing error : " << parser->error().value();
+        return EXIT_FAILURE;
+    }
+
+    auto compiler = std::make_unique<ast::compiler>(parser->ast());
+    if (compiler->error().has_value()) {
+        std::cerr << "compiling error : " << compiler->error().value();
+        return EXIT_FAILURE;
+    }
+
+    std::cout << compiler->result();
     return EXIT_SUCCESS;
 }

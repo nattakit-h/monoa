@@ -27,11 +27,18 @@
 
 namespace monoa::ast {
 
+struct local_var
+{
+    std::string name;
+    unsigned int address;
+};
+
 class compiler : public visitor
 {
 public:
     compiler(root* ast);
     auto result() -> std::string;
+    auto error() -> std::optional<std::string>;
 
     auto visit(root* node) -> void;
     auto visit(literal* node) -> void;
@@ -49,6 +56,7 @@ private:
     std::string section_text;
     std::string section_data;
     unsigned int stack_length = 0;
+    std::vector<local_var> local_vars;
 
     auto has_error() -> bool;
     auto is_unsigned(basic_type type) -> bool;

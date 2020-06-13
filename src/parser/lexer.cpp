@@ -23,7 +23,6 @@
 namespace {
 
 constexpr unsigned int token_string_padding = 17;
-
 }
 
 namespace monoa::parser {
@@ -31,6 +30,11 @@ namespace monoa::parser {
 lexer::lexer(std::string source) : source(source)
 {
     this->process_source();
+}
+
+auto lexer::error() -> std::optional<std::string>
+{
+    return this->error_string;
 }
 
 auto lexer::get_tokens() -> std::vector<token>
@@ -148,7 +152,7 @@ auto lexer::make_token(enum token::type type, std::string lexeme) -> void
 
 auto lexer::is_end() -> bool
 {
-    return this->current >= this->source.length();
+    return this->current >= this->source.length() || this->error_string.has_value();
 }
 
 auto lexer::peek() -> unsigned char
@@ -204,7 +208,7 @@ auto lexer::consume_keyword(std::string expected, enum token::type type) -> void
     } else if (!word.empty()) {
         this->make_token(token::type::lit_identifier, word);
     } else {
-        this->make_token(token::type::ctr_error, word);
+        this->error_string = "empty identifier";
     }
 }
 
@@ -213,7 +217,7 @@ auto lexer::consume_literal() -> void
     if (std::isspace(this->peek())) {
         this->consume_white_space();
     } else if (!std::isalnum(this->peek()) && this->peek() != '_') {
-        this->make_token(token::type::ctr_error, std::string(1, this->consume_char()));
+        this->error_string = "invalid token in literal : " + std::to_string(this->consume_char());
     } else if (std::isdigit(this->peek())) {
         this->consume_number();
     } else {
@@ -251,7 +255,7 @@ auto lexer::consume_string() -> void
             return;
         }
     }
-    this->make_token(token::type::ctr_error, "");
+    this->error_string = "unmatched \"";
 }
 
 } // namespace monoa::parser

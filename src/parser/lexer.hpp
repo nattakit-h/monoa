@@ -19,6 +19,7 @@
 #ifndef MONOA_PARSER_LEXER_HPP
 #define MONOA_PARSER_LEXER_HPP
 
+#include <optional>
 #include <string>
 #include <vector>
 #include <parser/token.hpp>
@@ -31,10 +32,12 @@ public:
     lexer(std::string source);
     auto get_tokens() -> std::vector<token>;
     auto print_tokens() -> void;
+    auto error() -> std::optional<std::string>;
 
 private:
     unsigned int current = 0;
     unsigned int line = 1;
+    std::optional<std::string> error_string;
     std::vector<token> tokens;
     std::string source;
     auto process_source() -> void;

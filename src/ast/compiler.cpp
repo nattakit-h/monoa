@@ -52,6 +52,11 @@ auto compiler::result() -> std::string
     return result;
 }
 
+auto compiler::error() -> std::optional<std::string>
+{
+    return this->error_string;
+}
+
 auto compiler::is_unsigned(basic_type type) -> bool
 {
     switch (type) {
@@ -228,6 +233,7 @@ auto compiler::visit(ast::variable_declaration* node) -> void
     if (this->has_error()) {
         return;
     }
+    this->push(0);
 }
 
 auto compiler::visit(ast::function_declaration* node) -> void
