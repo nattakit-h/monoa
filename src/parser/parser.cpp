@@ -159,8 +159,8 @@ auto parser::make_literal() -> std::unique_ptr<ast::expression>
 {
     auto c = std::make_unique<ast::literal>();
     auto value = this->advance()->lexeme;
-    c->value = (std::stoi(value));
-    c->type = std::make_unique<ast::scalar_type>(ast::basic_type::i32);
+    c->value = std::stol(value);
+    c->type = std::make_unique<ast::scalar_type>(ast::basic_type::i64);
     return c;
 }
 
@@ -169,7 +169,8 @@ auto parser::make_decl_var() -> std::unique_ptr<ast::variable_declaration>
     auto var_decl = std::make_unique<ast::variable_declaration>();
     this->advance();
     if (this->peek()->type != token::type::lit_identifier) {
-        this->error_string = "expecting variable name";
+        this->set_error("expecting variable name");
+        return var_decl;
     }
     var_decl->name = this->advance()->lexeme;
     this->advance(); // assignment
@@ -180,8 +181,14 @@ auto parser::make_decl_var() -> std::unique_ptr<ast::variable_declaration>
 auto parser::make_decl_fun() -> std::unique_ptr<ast::function_declaration>
 {
     auto fun_decl = std::make_unique<ast::function_declaration>();
-    this->advance();                          // fun
-    fun_decl->name = this->advance()->lexeme; // fun name
+    this->advance();
+
+    if (this->peek()->type != token::type::lit_identifier) {
+        this->set_error("expecting function name");
+        return fun_decl;
+    }
+
+    fun_decl->name = this->advance()->lexeme;
     fun_decl->parameters = this->make_fun_parameters();
     if (this->peek()->type == token::type::opt_return) {
         advance(); // return opt

@@ -46,17 +46,19 @@ enum class operation
 
 enum class basic_type
 {
-    i8,
-    i16,
-    i32,
-    i64,
-    iarch,
+    unknow,
 
     u8,
+    i8,
+
     u16,
+    i16,
+
     u32,
+    i32,
+
     u64,
-    uarch,
+    i64,
 
     f32,
     f64

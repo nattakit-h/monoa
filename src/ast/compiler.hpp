@@ -24,7 +24,6 @@
 #include <vector>
 #include <ast/ast.hpp>
 #include <ast/visitor.hpp>
-#include <vm/opcode.hpp>
 
 namespace monoa::ast {
 
@@ -32,8 +31,7 @@ class compiler : public visitor
 {
 public:
     compiler(root* ast);
-    auto opcodes() -> std::vector<std::uint8_t>;
-    auto print_opcodes() -> void;
+    auto result() -> std::string;
 
     auto visit(root* node) -> void;
     auto visit(literal* node) -> void;
@@ -47,14 +45,19 @@ public:
 
 private:
     std::optional<std::string> error_string;
-    std::vector<std::uint8_t> program;
+    basic_type result_type = basic_type::unknow;
+    std::string section_text;
+    std::string section_data;
+    unsigned int stack_length = 0;
 
     auto has_error() -> bool;
-    auto emit(vm::opcode data) -> void;
-    auto emit(std::uint8_t data) -> void;
-    auto emit(std::uint16_t data) -> void;
-    auto emit(std::uint32_t data) -> void;
-    auto emit(std::uint64_t data) -> void;
+    auto is_unsigned(basic_type type) -> bool;
+    auto set_result_type(basic_type type) -> void;
+    auto label(std::string lab) -> void;
+    auto command(std::string cmd) -> void;
+    auto push(uint64_t data) -> void;
+    auto push(std::string reg) -> void;
+    auto pop(std::string reg) -> void;
 };
 
 } // namespace monoa::ast

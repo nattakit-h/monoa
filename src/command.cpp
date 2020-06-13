@@ -22,7 +22,6 @@
 #include <ast/printer.hpp>
 #include <parser/lexer.hpp>
 #include <parser/parser.hpp>
-#include <vm/vm.hpp>
 
 using namespace monoa;
 
@@ -31,25 +30,18 @@ auto main(int argc, char* argv[]) -> int
     auto source = R"(
 fun main() -> int
 {
-    return 74 - 10 + 44 * 99 - 346 * 2;
+    let a = 10;
+    return 74 - 10 + 44 * 99 - 346 / 2;
 }
 
 )";
     auto lexer = std::make_unique<parser::lexer>(source);
-    lexer->print_tokens();
     auto parser = std::make_unique<parser::parser>(lexer->get_tokens());
+    auto compiler = std::make_unique<ast::compiler>(parser->ast());
     if (!parser->error().has_value()) {
-        std::cout << std::endl;
-        auto printer = std::make_unique<ast::printer>();
-        printer->print(parser->ast());
+        std::cout << compiler->result();
     } else {
         std::cerr << "parsing error : " << parser->error().value();
     }
-    auto compiler = std::make_unique<ast::compiler>(parser->ast());
-    compiler->print_opcodes();
-    auto vm = std::make_unique<vm::vm>(compiler->opcodes());
-
-    std::cout << vm->run() << std::endl;
-
     return EXIT_SUCCESS;
 }

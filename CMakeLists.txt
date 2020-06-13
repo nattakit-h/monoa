@@ -14,7 +14,6 @@ target_sources(monoa PRIVATE
   src/parser/parser.cpp
   src/parser/token.cpp
   src/parser/lexer.cpp
-  src/vm/vm.cpp
   src/command.cpp)
 
 set_property(TARGET monoa PROPERTY CXX_STANDARD 17)

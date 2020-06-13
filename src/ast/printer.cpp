@@ -33,8 +33,32 @@ auto printer::visit(root* node) -> void
 
 auto printer::visit(literal* node) -> void
 {
-    // TODO: Get type properly
-    this->print_node("lit : " + std::to_string(std::get<int>(node->value)));
+    switch (node->type->type) {
+    case ast::basic_type::i8:
+        this->print_node("lit : " + std::to_string(std::get<int8_t>(node->value)));
+        break;
+    case ast::basic_type::u8:
+        this->print_node("lit : " + std::to_string(std::get<uint8_t>(node->value)));
+        break;
+    case ast::basic_type::i16:
+        this->print_node("lit : " + std::to_string(std::get<int16_t>(node->value)));
+        break;
+    case ast::basic_type::u16:
+        this->print_node("lit : " + std::to_string(std::get<uint16_t>(node->value)));
+        break;
+    case ast::basic_type::i32:
+        this->print_node("lit : " + std::to_string(std::get<int32_t>(node->value)));
+        break;
+    case ast::basic_type::u32:
+        this->print_node("lit : " + std::to_string(std::get<uint32_t>(node->value)));
+        break;
+    case ast::basic_type::i64:
+        this->print_node("lit : " + std::to_string(std::get<int64_t>(node->value)));
+        break;
+    case ast::basic_type::u64:
+        this->print_node("lit : " + std::to_string(std::get<uint64_t>(node->value)));
+        break;
+    }
 }
 
 auto printer::visit(unary_operation* node) -> void
